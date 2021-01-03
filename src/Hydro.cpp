@@ -44,7 +44,7 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   for (int i = 0; i < field.size(); ++i)
     new->InsertNextValue(field[i]);
   // Attachement to the mesh
-   mesh->GetCellData()->AddArray(new);
+  mesh->GetCellData()->AddArray(new);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
