@@ -164,14 +164,14 @@ void Hydro::compute_volume()
 
     // Get cell c to retrieve its nodes
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
+    auto cell = m_mesh->GetCell(c);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int nb_nodes_of_cell = 1; // Change this line to get the correct number of nodes
+    int nb_nodes_of_cell = cell->GetNumberOfPoints();
     for (int n = 0; n < nb_nodes_of_cell; ++n) {
       double p[3];
       // Get node n coordinates
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // TODO : write code here
+      m_mesh->GetPoint(cell->GetPointIds()->GetId(n), p);
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       coord[n] = std::make_pair(p[0], p[1]);
     }
