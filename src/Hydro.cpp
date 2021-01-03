@@ -34,7 +34,17 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
 {
   // Create a VTK double array, insert values and attach it to the mesh
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  // Create vtk double array
+  auto new = vtkSmartPointer<vtkDoubleArray>::New();
+  // Allocation
+  new->Allocate(field.size());
+  new->SetNumberOfComponents(1);
+  new->SetName(field_name.c_str());
+  // Values insertion
+  for (int i = 0; i < field.size(); ++i)
+    new->InsertNextValue(field[i]);
+  // Attachement to the mesh
+   mesh->GetCellData()->AddArray(new);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -47,7 +57,13 @@ void add_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
 {
   // Create a VTK double array, insert values and attach it to the mesh
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  auto new = vtkSmartPointer<vtkDoubleArray>::New();
+  new->Allocate(field.size());
+  new->SetNumberOfComponents(1);
+  new->SetName(field_name.c_str());
+  for (int i = 0; i < field.size(); ++i)
+    new->InsertNextValue(field[i]);
+  mesh->GetPointData()->AddArray(new);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -60,7 +76,13 @@ void add_vector_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
 {
   // Create a VTK double array, insert values and attach it to the mesh
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  auto new = vtkSmartPointer<vtkDoubleArray>::New();
+  new->Allocate(field.size());
+  new->SetNumberOfComponents(1);
+  new->SetName(field_name.c_str());
+  for (int i = 0; i < field.size(); ++i)
+    new->InsertNextTuple(&(field[i].first))
+  mesh->GetPointData()->AddArray(new);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -92,7 +114,9 @@ void Hydro::init()
 
     // Get node n coordinates and save them to m_vars->m_node_coord
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
+    m_mesh->GetPoint(n, coord);
+    std::pair<double, double> handler =  {coord[0], coord[1]};
+    m_vars->m_node_coord.emplace_back(handler);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
@@ -106,11 +130,11 @@ void Hydro::init()
 
     // Get cell c to retrieve its node ids
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
+    auto cell = m_mesh->GetCell(c);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int nb_nodes_for_cell = 1; // Change this line to get the correct number of nodes
+    int nb_nodes_for_cell = cell->GetNumberOfPoints();
     for (int n = 0; n < nb_nodes_for_cell; ++n) {
-      auto node = n; // Change this line to get the global node id
+      auto node = cell->GetPointIds()->GetId(n);
       m_vars->m_node_mass[node] += node_mass_contrib;
     }
   }
