@@ -379,7 +379,11 @@ void Hydro::dump(int step, double simulation_time)
 
   // Attach the simulation time to the mesh
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  vtkSmartPointer<vtkDoubleArray> time = vtkSmartPointer<vtkDoubleArray>::New();
+  time->SetNumberOfComponents(1);
+  time->SetName("time");
+  time->InsertNextValue(simulation_time);
+  m_mesh->GetFieldData()->AddArray(time);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   add_cell_field(m_mesh, m_vars->m_pressure, "Pressure");
@@ -397,7 +401,10 @@ void Hydro::dump(int step, double simulation_time)
 
   // Write the solutions to file_name
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+  writer->SetFileName(file_name.c_str());
+  writer->SetInputData(m_mesh);
+  writer->Write();
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
